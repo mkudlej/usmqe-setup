@@ -1,0 +1,19 @@
+---
+# ==============================================
+#  QE teardown of setup with disk with failures
+# ==============================================
+#
+# See 'Setup' file for details.
+
+- hosts: usm_nodes
+  remote_user: root
+  vars:
+    # TODO use available disks instead of hardcoded ones
+    devices: 
+      - { device: 'vdd', new_device: 'xxa' }
+      - { device: 'vde', new_device: 'xxb' }
+
+  tasks:
+    - name: Remove disks
+      shell: "dmsetup remove {{ item.new_device }}"
+      with_items: "{{ devices }}"

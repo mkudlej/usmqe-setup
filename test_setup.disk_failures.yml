@@ -1,0 +1,46 @@
+---
+# ========================================
+#  QE configuration of disk with failures
+# ========================================
+#
+# Overview of the configuration this playbook sets up:
+#
+# * Creates device mapper disks from disks avaialble for volumes/pools.
+#   First failure is at 100MB and there are other 19 failures. Size of failed block is 1kB
+#
+# Example of dm file
+# 0 10 linear /dev/vdb 0
+# 10 5 flakey /dev/vdb 10 1 1
+# 15 10 linear /dev/vdb 15
+# 25 5 flakey /dev/vdb 25 1 1
+# 30 10 linear /dev/vdb 30
+#
+# Requirements:
+#
+# * Size of used disks is at least 10 GB
+#
+# See Also:
+#
+# * https://www.kernel.org/doc/Documentation/device-mapper/dm-flakey.txt
+# * https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/logical_volume_manager_administration/device_mapper
+# * https://mbroz.fedorapeople.org/talks/DeviceMapperBasics/dm.pdf
+# * https://stackoverflow.com/questions/31806244/simulating-bad-sectors-in-linux
+# 
+# If there is need to do scsi disk with failure, see:
+#
+# * http://sg.danny.cz/sg/sdebug26.html
+# * https://www.certdepot.net/rhel7-configure-iscsi-target-initiator-persistently/
+
+- hosts: usm_nodes
+  remote_user: root
+  vars:
+    # TODO use available disks instead of hardcoded ones
+    devices: 
+      - { device: 'vdd', new_device: 'xxa' }
+      - { device: 'vde', new_device: 'xxb' }
+    # other options "error", "zero", "delay", see 'man 8 dmsetup'
+    table_format: "error" 
+
+  roles:
+    - name: Create new disks with specified table format
+      role: qe-dmdisks

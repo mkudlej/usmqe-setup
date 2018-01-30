@@ -1,0 +1,13 @@
+---
+# Table format, see 'man 8 dmsetup'
+table_format: "flakey"
+# see https://www.kernel.org/doc/Documentation/device-mapper/dm-flakey.txt
+flakey_args: "1 1"
+
+# This default configuration creates 20 failed blocks, 1kB each.
+# First failed blocks will be at 100MB.
+# Size of used disk for mapping should be at least 10GB.
+number_of_failed_blocks: 20
+first_failure_at: 100 #MB
+repeat_failure_every: 500 #MB
+failed_block_size: 5 #kB

@@ -1,0 +1,15 @@
+---
+- name: Prepare helper script
+  copy: src=gen_dm_file.sh dest="/opt/gen_dm_file.sh" mode="u=rwx,g=rx,o=rx"
+
+- name: Generate description file
+  shell: "/opt/gen_dm_file.sh /dev/{{ item.device }} {{ table_format }} {{ first_failure_at }} {{ repeat_failure_every }} {{ failed_block_size }} {{ number_of_failed_blocks }} {{ flakey_args }} > {{item.device}}_description_file"
+  with_items: "{{ devices }}"
+
+- name: Create disk
+  shell: "cat {{item.device}}_description_file | dmsetup create {{ item.new_device }}"
+  with_items: "{{ devices }}"
+
+- name: Check result
+  shell: "lsblk | grep {{ item.new_device }}"
+  with_items: "{{ devices }}"

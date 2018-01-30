@@ -39,7 +39,7 @@
       - { device: 'vdd', new_device: 'xxa' }
       - { device: 'vde', new_device: 'xxb' }
     # other options "error", "zero", "delay", see 'man 8 dmsetup'
-    table_format: "error" 
+    table_format: "flakey" 
 
   roles:
     - name: Create new disks with specified table format

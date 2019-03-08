@@ -6,7 +6,7 @@ if [ $# -lt 6 -o "$1" == "-help" -o "$1" == "-h" ]; then
   echo "<full path to device>: for example '/dev/vdb'"
   echo "<table format>: can be one of: 'flakey', 'zero', 'delay', 'error'"
   echo "<first failure>: first failure is after X MB from disk "
-  echo ""
+  exit
 fi
 
 device=$1

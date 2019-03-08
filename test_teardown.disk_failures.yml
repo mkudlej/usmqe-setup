@@ -14,6 +14,12 @@
       - { device: 'vde', new_device: 'xxb' }
 
   tasks:
+
+    - name: Remove helper script
+      file:
+        dest: "/usr/local/bin/usmqe_gen_dm_file.sh"
+        state: "absent"
+
     - name: Remove disks
       shell: "dmsetup remove {{ item.new_device }}"
       with_items: "{{ devices }}"

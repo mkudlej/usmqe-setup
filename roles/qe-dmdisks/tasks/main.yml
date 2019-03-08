@@ -1,9 +1,18 @@
 ---
-- name: Prepare helper script
-  copy: src=gen_dm_file.sh dest="/opt/gen_dm_file.sh" mode="u=rwx,g=rx,o=rx"
+
+- name: Install helper script
+  copy:
+    src: "gen_dm_file.sh"
+    dest: "/usr/local/bin/usmqe_gen_dm_file.sh"
+    mode: "755"
+
+- name: Install tools required by helper script
+  yum:
+    name: bc
+    state: installed
 
 - name: Generate description file
-  shell: "/opt/gen_dm_file.sh /dev/{{ item.device }} {{ table_format }} {{ first_failure_at }} {{ repeat_failure_every }} {{ failed_block_size }} {{ number_of_failed_blocks }} {{ flakey_args }} > {{item.device}}_description_file"
+  shell: "usmqe_gen_dm_file.sh /dev/{{ item.device }} {{ table_format }} {{ first_failure_at }} {{ repeat_failure_every }} {{ failed_block_size }} {{ number_of_failed_blocks }} {{ flakey_args }} > {{item.device}}_description_file"
   with_items: "{{ devices }}"
 
 - name: Create disk
